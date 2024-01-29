@@ -78,4 +78,5 @@ pattern = "**/{*.js,*.jsx,*.ts,*.tsx,*.json}"
 start = "typescript-language-server --stdio"
 
 [deployment]
-run = ["sh", "-c", "node index.js"]
+run = ["sh", "-c", "node BrightspaceToDoc.js"]
+deploymentTarget = "cloudrun"

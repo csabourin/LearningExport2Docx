@@ -24,6 +24,7 @@ const findFileInDir = (dir, filename) => {
 const constructLocalUrl = (src, localBrightspaceUrl) => {
   if (
     src.startsWith("/shared/LCS_HTML_Templates/") ||
+    src.startsWith("/shared/") ||
     src.startsWith(`/d2l/common/`)
   ) {
     return localBrightspaceUrl + src;
@@ -98,6 +99,7 @@ const urlToBase64 = async (url, localBrightspaceUrl, tempDir) => {
   // Check if the URL starts with "/shared/LCS_HTML_Templates/" and prepend the domain
   if (
     url.startsWith("/shared/LCS_HTML_Templates/") ||
+    url.startsWith("/shared/") ||
     url.startsWith(`/d2l/common/`)) {
     url = localBrightspaceUrl + url;
   }
