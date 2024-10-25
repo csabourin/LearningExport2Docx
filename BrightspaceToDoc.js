@@ -1,4 +1,4 @@
-const debug = process.env.debug_mode || false;
+const debug = process.env['debug_mode'] || false;
 const fs = require("fs");
 const htmlDocx = require("html-docx-js");
 const xml2js = require("xml2js");
@@ -10,11 +10,11 @@ const path = require("path");
 const AdmZip = require("adm-zip");
 const os = require("os");
 const rimraf = require("rimraf");
-let titleElement = "BrightspaceToDocx";
+let titleElement = "PackagesToDocx";
 const express = require("express");
 const session = require('express-session');
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env['PORT'] || 3000;
 const multer = require("multer");
 
 const storage = multer.diskStorage({
@@ -31,8 +31,8 @@ const storage = multer.diskStorage({
   }
 });
 
-const upload = multer({ storage: storage });
-let localBrightspaceUrl = process.env.bsurl || "https://app.csps-efpc.gc.ca";
+const upload = multer({ storage: storage, limits: { fileSize: 200 * 1024 * 1024 } });;
+let localBrightspaceUrl = process.env['bsurl'] || "https://app.csps-efpc.gc.ca";
 const { embedImages, urlToBase64, svgStringToPngBuffer } = require('./utils/process-images');
 const { parseItems,
   formatQuizDataAsHtml,
@@ -352,7 +352,13 @@ const processImsManifest = async (imsManifestPath, res, tempDir, req) => {
       titleToResourceMap[title] = identifier;
       const quizFilePath = path.join(tempDir, href);
       if (debug) console.log("982 Parsing quiz file: " + quizFilePath);
-      const quizData = await parseQuizXmlFile(quizFilePath, tempDir);
+      let quizData="";
+      try {
+        quizData = await parseQuizXmlFile(quizFilePath, tempDir);
+      } catch (error) {
+        console.error("An error occurred while parsing the quiz file: ", error);
+        // Handle error or fallback logic here
+      }
       const quizHtmlContent = formatQuizDataAsHtml(quizData, title, req);
       quizHtmlContentMap[title] = quizHtmlContent;
 
@@ -404,7 +410,7 @@ app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 
 app.use(session({
-  secret: 'BrightSpace2Docx',
+  secret: 'LearningExport2Docx',
   resave: false,
   saveUninitialized: true,
   cookie: { secure: true } // Use 'secure: true' if you are using HTTPS

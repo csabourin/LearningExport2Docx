@@ -233,11 +233,11 @@ async function parseQuizXml(xmlString, tempDir) {
       if (debug) console.log("521 Question Type: ", qmdQuestionTypeValue);
 
       if (isMultipleChoice) {
-        if (!item.presentation || !item.presentation.flow || !item.presentation.flow.material || !item.presentation.flow.material.mattext) {
+        if (!item.presentation || !item.presentation.flow || !item.presentation.flow.material || !item.presentation.flow.material?.mattext) {
           return;
         }
 
-        const questionText = item.presentation.flow.material.mattext._;
+        const questionText = item.presentation.flow.material?.mattext._;
 
         if (!item.presentation.flow.response_lid || !item.presentation.flow.response_lid.render_choice || !item.presentation.flow.response_lid.render_choice.flow_label) {
           return;
@@ -276,67 +276,58 @@ async function parseQuizXml(xmlString, tempDir) {
           feedbacks: feedbacks,
         });
       } else if (isMultiSelect) {
-  const questionText = item.presentation.flow.material.mattext._;
-  const answerOptions = item.presentation.flow.response_lid.render_choice.flow_label;
-  const answerChoices = answerOptions.map(
-    (answerOption) => answerOption.response_label.flow_mat.material.mattext._
-  );
+try {
+  const questionText = item.presentation.flow.material?.mattext._ ?? "Default question text";
+  const answerOptions = item.presentation.flow.response_lid.render_choice.flow_label ?? [];
+
+  const answerChoices = answerOptions.map(answerOption => answerOption.response_label.flow_mat.material?.mattext._ ?? "Default answer text");
 
   let correctAnswerIdents = [];
 
-// Check for the correct answer identifiers using the first structure
-const correctRespCondition = item.resprocessing.respcondition.find(
-  (condition) => condition.$?.title === "Scoring for the correct answers"
-);
-
-if (correctRespCondition) {
-  if (Array.isArray(correctRespCondition.conditionvar.varequal)) {
-    correctAnswerIdents = correctRespCondition.conditionvar.varequal.map((varequal) => varequal._);
-  } else {
-    correctAnswerIdents.push(correctRespCondition.conditionvar.varequal._);
-  }
-}
-
-// Check for the correct answer identifiers using the second structure
-if (correctAnswerIdents.length === 0) {
-  const secondStructureConditions = item.resprocessing.respcondition.filter(
-    (condition) => condition.setvar?.$?.action === "Add" && condition.setvar?.$?.varname === "D2L_Correct"
-  );
-
-  for (const condition of secondStructureConditions) {
-    if (Array.isArray(condition.conditionvar.varequal)) {
-      correctAnswerIdents = correctAnswerIdents.concat(condition.conditionvar.varequal.map((varequal) => varequal._));
-    } else {
-      correctAnswerIdents.push(condition.conditionvar.varequal._);
+  // Unified approach to handle correct answer identifiers
+  const correctRespConditions = item.resprocessing.respcondition ?? [];
+  correctRespConditions.forEach(condition => {
+    if (condition.$?.title === "Scoring for the correct answers" || (condition.setvar?.$?.action === "Add" && condition.setvar?.$?.varname === "D2L_Correct")) {
+      const varequals = Array.isArray(condition.conditionvar.varequal) ? condition.conditionvar.varequal : [condition.conditionvar.varequal];
+      varequals.forEach(varequal => {
+        if (varequal?._) correctAnswerIdents.push(varequal._);
+      });
     }
-  }
-}
-
-  // Map response_label objects
-  const responseLabels = answerOptions.map((flow_label) => flow_label.response_label.$.ident);
-
-  // Save the correct answers as an array of uppercase letters
-  const correctAnswers = correctAnswerIdents.map((ident) => {
-    const answerIndex = responseLabels.indexOf(ident);
-    const letter = String.fromCharCode(65 + answerIndex); // Convert the index to an uppercase letter
-    return letter;
   });
 
+  const responseLabels = answerOptions.map(flow_label => flow_label.response_label.$.ident ?? "");
+
+  // Determine correct answers based on identifiers
+  const correctAnswers = correctAnswerIdents.reduce((acc, ident) => {
+    const answerIndex = responseLabels.indexOf(ident);
+    if (answerIndex !== -1) {
+      const letter = String.fromCharCode(65 + answerIndex);
+      acc.push(letter);
+    }
+    return acc;
+  }, []);
+
+  // Assuming quizData is already defined elsewhere
   quizData.push({
     questionType: "Multi-Select",
     question: questionText,
     answerChoices: answerChoices,
     correctAnswer: correctAnswers.join(", "),
   });
+} catch (error) {
+  console.error("Error processing quiz data:", error);
+  // Handle error or provide fallback data
+}
+
 }
 
  else if (isOrdering) {
-      const question = item.presentation.flow.material.mattext._;
+      const question = item.presentation.flow.material?.mattext._;
 
       const choices =
         item.presentation.flow.response_grp.render_choice.flow_label.response_label.map(
           (choice) => {
-            return choice.flow_mat.material.mattext._;
+            return choice.flow_mat.material?.mattext._;
           }
         );
       // Extract correct answers based on the 'setvar' value of 1
@@ -371,11 +362,11 @@ if (correctAnswerIdents.length === 0) {
         correctAnswer: correctAnswers,
       });
     } else if (isTrueFalse) {
-      if (!item.presentation || !item.presentation.flow || !item.presentation.flow.material || !item.presentation.flow.material.mattext) {
+      if (!item.presentation || !item.presentation.flow || !item.presentation.flow.material || !item.presentation.flow.material?.mattext) {
         return;
       }
 
-      const questionText = item.presentation.flow.material.mattext._;
+      const questionText = item.presentation.flow.material?.mattext._;
 
       if (!item.presentation.flow.response_lid || !item.presentation.flow.response_lid.render_choice || !item.presentation.flow.response_lid.render_choice.flow_label) {
         return;
@@ -440,15 +431,15 @@ if (correctAnswerIdents.length === 0) {
       };
 
       // Parse the question
-      const question = item.presentation.flow.material.mattext._;
+      const question = item.presentation.flow.material?.mattext._;
 
       // Parse the answer choices
       const answerChoices = item.presentation.flow.response_grp.map(
         (responseGroup) => ({
-          label: responseGroup.material.mattext._,
+          label: responseGroup.material?.mattext._,
           options: responseGroup.render_choice.flow_label.response_label.map(
             (label) => ({
-              text: label.flow_mat.material.mattext._,
+              text: label.flow_mat.material?.mattext._,
               ident: label.$.ident,
             })
           ),
@@ -461,7 +452,7 @@ if (correctAnswerIdents.length === 0) {
       );
 
       // Parse the feedback
-      const feedback = item.itemfeedback?.material.mattext._;
+      const feedback = item.itemfeedback?.material?.mattext._;
 
       quizData.push({
         questionType: "Matching",
@@ -471,21 +462,25 @@ if (correctAnswerIdents.length === 0) {
         feedbacks: feedback,
       });
     } else if (isShortAnswer) {
-      let question = item.presentation.flow.material.mattext._;
-      let answerChoices = item.resprocessing.respcondition.map(
-        (resp) => resp.conditionvar?.varequal?._
-      );
-      let feedback = item.itemfeedback.material.mattext._;
-
-      quizData.push({
-        questionType: "Short Answer",
-        question: question,
-        answerChoices: answerChoices,
-        feedbacks: feedback,
-      });
+      let question = item.presentation.flow.material?.mattext._;
+   let answerChoices = [];
+   // Check for 'respcondition' and handle different data structures or absence
+   const respCondition = item.resprocessing?.respcondition;
+   if (Array.isArray(respCondition)) {
+     answerChoices = respCondition.map((resp) => resp.conditionvar?.varequal?._);
+   } else if (respCondition) {
+     answerChoices.push(respCondition.conditionvar?.varequal?._); // Single object, not an array
+   }
+   let feedback = item.itemfeedback?.material?.mattext._;
+   quizData.push({
+     questionType: "Short Answer",
+     question: question,
+     answerChoices: answerChoices,
+     feedbacks: feedback,
+   });
     } else if (isLongAnswer) {
       // Extract the question text
-      const questionText = item.presentation.flow.material.mattext._;
+      const questionText = item.presentation.flow.material?.mattext._;
       quizData.push({
         questionType: "Long Answer",
         question: questionText

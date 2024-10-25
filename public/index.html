@@ -12,7 +12,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fredericka+the+Great&display=swap" rel="stylesheet" />
-  <title>Brightspace2Docx</title>
+  <title>LearningExport2Docx</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -167,20 +167,21 @@
 
 <body>
   <div class="container">
-    <h1>Brightspace2Docx</h1>
+    <h1>LearningExport2Docx</h1>
+    <h2>This tool is not endorsed by or affiliated with D2L or Brightspace</h2>
     <details id="myDetails">
-      <summary>How to use Brightspace2Docx</summary>
+      <summary>How to use LearningExport2Docx</summary>
       <div id="detailsContent">
         <p>
-          Follow these steps to convert your D2L Brightspace course content into
+          Follow these steps to convert your LMS Package  course content into
           HTML or DOCX format:
         </p>
 
         <ol>
-          <li><b>Export your course from D2L Brightspace:</b></li>
+          <li><b>Export your course from your LMS:</b></li>
           <ul>
             <li>
-              Login to D2L Brightspace and navigate to the course you wish to
+              Login to your LMS and navigate to the course you wish to
               export.
             </li>
             <li>
@@ -204,12 +205,12 @@
               50MB.
             </li>
           </ul>
-          <li><b>Convert your course content with Brightspace2Docx:</b></li>
+          <li><b>Convert your course content with LearningExport2Docx:</b></li>
           <ul>
-            <li>Go to the Brightspace2Docx website.</li>
+            <li>Go to the LearningExport2Docx website.</li>
             <li>
               Click on the Select FIle button and select the ZIP file you saved
-              from Brightspace.
+              from your LMS.
             </li>
             <li>
               Select the output format you want for your document: HTML or DOCX.
@@ -252,6 +253,9 @@
       </p>
       <button type="submit" class="button">Upload</button>
     </form>
+    <div id="progressBarContainer" style="width: 100%; background: #eee; display: none;">
+      <div id="progressBar" style="width: 0%; height: 20px; background: #3498db;"></div>
+    </div>
     <div id="loading-spinner" style="display: none">
 
       <div id="loader" class="loader"><img src="android-chrome-192x192.png" id="easter-egg-img" alt="Sébastien Gilbert">

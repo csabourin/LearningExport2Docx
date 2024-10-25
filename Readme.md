@@ -1,6 +1,6 @@
-﻿# BrightSpace2Docx
+﻿# LearningExport2Docx
 
-This is a Node.js script to convert BrightSpace course exports into standalone HTML or DOCX files. The script processes images, including SVGs, and embedded quizzes. It also combines multiple HTML files into a single HTML or DOCX file, keeping the original file structure and styling intact.
+This is a Node.js script to convert an LMS course exports into standalone HTML or DOCX files. The script processes images, including SVGs, and embedded quizzes. It also combines multiple HTML files into a single HTML or DOCX file, keeping the original file structure and styling intact.
 
 ## Dependencies
 
@@ -43,7 +43,7 @@ Drag/drop the zip package in the window and press enter.
 node index.js <path-to-zip-file>
 ```
 
-Replace `<path-to-zip-file>` with the path to the BrightSpace course export ZIP file you want to convert.
+Replace `<path-to-zip-file>` with the path to the LMS course export ZIP file you want to convert.
 
 When the script runs, it will prompt you to choose the output file format (HTML or DOCX). Enter "html" or "docx" and press enter.
 
@@ -51,7 +51,7 @@ The script will generate a single output file, either in HTML or DOCX format, in
 
 ## Limitations
 
-This script only works with BrightSpace course exports that follow the expected file structure. If the course export is incomplete or contains unexpected elements, the script may not work as intended.
+This script only works with LMS course exports that follow the expected file structure. If the course export is incomplete or contains unexpected elements, the script may not work as intended.
 
 Additionally, the script may not handle all types of media or interactive elements. Please verify the output file's content to ensure accuracy.
 
