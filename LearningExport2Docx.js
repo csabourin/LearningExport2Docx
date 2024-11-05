@@ -32,7 +32,7 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage: storage, limits: { fileSize: 200 * 1024 * 1024 } });;
-let localBrightspaceUrl = process.env['bsurl'] || "https://app.csps-efpc.gc.ca";
+let localLearningExport2DocxUrl = process.env['bsurl'] || "https://app.csps-efpc.gc.ca";
 const { embedImages, urlToBase64, svgStringToPngBuffer } = require('./utils/process-images');
 const { parseItems,
   formatQuizDataAsHtml,
@@ -100,7 +100,7 @@ const processHtmlFiles = async (
       : "";
 
     if ($) {
-      bodyContent = await embedImages($, htmlFilePath, localBrightspaceUrl, tempDir);
+      bodyContent = await embedImages($, htmlFilePath, localLearningExport2DocxUrl, tempDir);
       const headContent = $("head").html();
 
       if (!firstHeadTag) {
@@ -126,7 +126,7 @@ const processHtmlFiles = async (
   };
 
   const processSvgImage = async (url, element, tempDir) => {
-    return urlToBase64(url, localBrightspaceUrl, tempDir)
+    return urlToBase64(url, localLearningExport2DocxUrl, tempDir)
       .then((base64DataUrl) => {
         if (!base64DataUrl || !base64DataUrl.startsWith("data:image/svg+xml;base64,")) {
           // Log the error or handle it as needed, then return to skip this file
@@ -152,7 +152,7 @@ const processHtmlFiles = async (
 
 
   const processOtherImages = async (url, element, tempDir) => {
-    return urlToBase64(url, localBrightspaceUrl, tempDir)
+    return urlToBase64(url, localLearningExport2DocxUrl, tempDir)
       .then((base64DataUrl) => {
         element.attr("src", base64DataUrl);
       });

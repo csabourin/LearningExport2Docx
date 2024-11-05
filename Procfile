@@ -1,1 +1,1 @@
-web: node BrightspaceToDoc.js
+web: node LearningExport2Docx.js

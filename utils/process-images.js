@@ -21,21 +21,21 @@ const findFileInDir = (dir, filename) => {
   return null;
 };
 
-const constructLocalUrl = (src, localBrightspaceUrl) => {
+const constructLocalUrl = (src, localLearningExport2DocxUrl) => {
   if (
     src.startsWith("/shared/LCS_HTML_Templates/") ||
     src.startsWith("/shared/") ||
     src.startsWith(`/d2l/common/`)
   ) {
-    return localBrightspaceUrl + src;
+    return localLearningExport2DocxUrl + src;
   }
   return src;
 };
 
-const replaceContentEnforcedPath = (src, localBrightspaceUrl) => {
+const replaceContentEnforcedPath = (src, localLearningExport2DocxUrl) => {
   let regexPattern;
-  if (src.startsWith(localBrightspaceUrl + "/content/enforced/")) {
-    regexPattern = new RegExp("^" + localBrightspaceUrl.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&') + "/content/enforced/[^/]+/");
+  if (src.startsWith(localLearningExport2DocxUrl + "/content/enforced/")) {
+    regexPattern = new RegExp("^" + localLearningExport2DocxUrl.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&') + "/content/enforced/[^/]+/");
     src = src.replace(regexPattern, "");
   }
 
@@ -65,7 +65,7 @@ const resolveAbsolutePath = (src, directoryPath) => {
 };
 
 
-const embedImages = async ($, htmlFilePath, localBrightspaceUrl) => {
+const embedImages = async ($, htmlFilePath, localLearningExport2DocxUrl) => {
   const images = $("img");
   const directoryPath = path.dirname(htmlFilePath);
 
@@ -76,13 +76,13 @@ const embedImages = async ($, htmlFilePath, localBrightspaceUrl) => {
       continue;
     }
 
-    src = constructLocalUrl(src, localBrightspaceUrl);
-    src = replaceContentEnforcedPath(src, localBrightspaceUrl);
+    src = constructLocalUrl(src, localLearningExport2DocxUrl);
+    src = replaceContentEnforcedPath(src, localLearningExport2DocxUrl);
     src = removeUrlParameters(src);
     src = resolveAbsolutePath(src, directoryPath);
 
     try {
-      const base64Data = await urlToBase64(src, localBrightspaceUrl);
+      const base64Data = await urlToBase64(src, localLearningExport2DocxUrl);
       if (!base64Data.startsWith("data:")) {
         throw new Error(`Invalid data URL: ${base64Data}`);
       }
@@ -95,13 +95,13 @@ const embedImages = async ($, htmlFilePath, localBrightspaceUrl) => {
   return $.html();
 };
 
-const urlToBase64 = async (url, localBrightspaceUrl, tempDir) => {
+const urlToBase64 = async (url, localLearningExport2DocxUrl, tempDir) => {
   // Check if the URL starts with "/shared/LCS_HTML_Templates/" and prepend the domain
   if (
     url.startsWith("/shared/LCS_HTML_Templates/") ||
     url.startsWith("/shared/") ||
     url.startsWith(`/d2l/common/`)) {
-    url = localBrightspaceUrl + url;
+    url = localLearningExport2DocxeUrl + url;
   }
 
   // Remove URL parameters

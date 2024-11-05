@@ -23,6 +23,6 @@
     ]
   },
   "scripts": {
-    "start": "node BrightspaceToDoc.js"
+    "start": "node LearningExport2Docx.js"
   }
 }
