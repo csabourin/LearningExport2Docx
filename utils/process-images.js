@@ -101,7 +101,7 @@ const urlToBase64 = async (url, localLearningExport2DocxUrl, tempDir) => {
     url.startsWith("/shared/LCS_HTML_Templates/") ||
     url.startsWith("/shared/") ||
     url.startsWith(`/d2l/common/`)) {
-    url = localLearningExport2DocxeUrl + url;
+    url = localLearningExport2DocxUrl + url;
   }
 
   // Remove URL parameters

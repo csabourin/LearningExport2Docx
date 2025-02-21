@@ -84,3 +84,6 @@ deploymentTarget = "cloudrun"
 [[ports]]
 localPort = 3000
 externalPort = 80
+
+[objectStorage]
+defaultBucketID = "replit-objstore-5566b699-d9aa-4e2e-bcc5-8cb3a1e29f09"
