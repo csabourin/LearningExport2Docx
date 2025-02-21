@@ -1,5 +1,5 @@
 ﻿# Use an official Node.js LTS runtime as a base image
-FROM node:16-alpine
+FROM node:18.12.1
 
 # Set working directory
 WORKDIR /app
@@ -13,7 +13,7 @@ COPY . .
 
 # Expose the port your Express server is listening on
 # (Make sure your app uses process.env.PORT || 3000 so Cloud Run can override it)
-EXPOSE 3000
+EXPOSE 8080
 
 # Start the application
 CMD [ "node", "LearningExport2Docx.js" ]
