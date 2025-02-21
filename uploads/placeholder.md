@@ -1,1 +1,1 @@
-﻿To ensure the upload folder is created.
+#Ensures that the folder is created
